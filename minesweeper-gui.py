@@ -153,7 +153,6 @@ class MinesweeperGUI:
         frame = tk.Frame(self.root, bg=self.bg_primary)
         frame.pack(expand=True)
         
-        # Title with gradient effect simulation
         title_frame = tk.Frame(frame, bg=self.bg_primary)
         title_frame.pack(pady=40)
         
