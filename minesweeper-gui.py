@@ -13,7 +13,7 @@ class Minesweeper:
         self.mine_locations = random.sample(range(rows * cols), num_mines)
         self.revealed_cells = [[False] * cols for _ in range(rows)]
         self.flagged_cells = [[False] * cols for _ in range(rows)]
-        self.questioned_cells = [[False] * cols for _ in range(rows)]  # NEW: Question mark state
+        self.questioned_cells = [[False] * cols for _ in range(rows)]  
         self.start_time = None
         self.place_mines()
         self.calculate_adjacent_mines()
@@ -81,17 +81,13 @@ class Minesweeper:
                     self.reveal_empty_cells(nr, nc)
 
     def cycle_flag(self, row, col):
-        """NEW: Cycle through unmarked -> flag -> question mark -> unmarked"""
         if not self.revealed_cells[row][col]:
             if not self.flagged_cells[row][col] and not self.questioned_cells[row][col]:
-                # Unmarked -> Flag
                 self.flagged_cells[row][col] = True
             elif self.flagged_cells[row][col]:
-                # Flag -> Question mark
                 self.flagged_cells[row][col] = False
                 self.questioned_cells[row][col] = True
             else:
-                # Question mark -> Unmarked
                 self.questioned_cells[row][col] = False
             return True
         return False
@@ -145,7 +141,7 @@ class MinesweeperGUI:
         self.show_splash_screen()
 
     def create_button(self, parent, text, font_size, command):
-        return tk.Button(parent, text=text, font=("Arial", font_size), bg="#1a1a1a", fg="#ffffff",
+        return tk.Button(parent, text=text, font=("Bauhaus 93", font_size), bg="#1a1a1a", fg="#f0e037",
                         activebackground="#2a2a2a", activeforeground="#00ff88", bd=0,
                         padx=30 if font_size >= 20 else 25, pady=10 if font_size >= 20 else 8,
                         cursor="hand2", command=command)
@@ -154,7 +150,7 @@ class MinesweeperGUI:
         self.clear_window()
         frame = tk.Frame(self.root, bg="#000000")
         frame.pack(expand=True)
-        tk.Label(frame, text="MINESWEEPER", font=("Arial", 64, "bold"), bg="#000000", fg="#00ff88").pack(pady=60)
+        tk.Label(frame, text="🚩MINESWEEPER 💣", font=("Rockwell Extra Bold", 64, "bold"), bg="#000000", fg="#00ff88").pack(pady=60)
         self.create_button(frame, "START GAME", 20, self.show_name_input).pack(pady=20)
         self.create_button(frame, "LEADERBOARD", 20, self.show_leaderboard).pack(pady=20)
         self.create_button(frame, "EXIT", 20, self.root.quit).pack(pady=20)
@@ -165,7 +161,7 @@ class MinesweeperGUI:
         self.clear_window()
         frame = tk.Frame(self.root, bg="#000000")
         frame.pack(expand=True)
-        tk.Label(frame, text="ENTER YOUR NAME", font=("Arial", 42, "bold"), bg="#000000", fg="#00ff88").pack(pady=60)
+        tk.Label(frame, text="ENTER YOUR NAME", font=("Bauhaus 93", 42, "bold"), bg="#000000", fg="#ce1c1c").pack(pady=60)
         name_entry = tk.Entry(frame, font=("Arial", 24), bg="#1a1a1a", fg="#ffffff", insertbackground="#00ff88", bd=0, relief="flat")
         name_entry.pack(pady=30, ipady=15, ipadx=30)
         name_entry.focus()
@@ -185,7 +181,7 @@ class MinesweeperGUI:
         self.clear_window()
         frame = tk.Frame(self.root, bg="#000000")
         frame.pack(expand=True)
-        tk.Label(frame, text="CHOOSE DIFFICULTY", font=("Arial", 42, "bold"), bg="#000000", fg="#00ff88").pack(pady=60)
+        tk.Label(frame, text="CHOOSE DIFFICULTY", font=("Bauhaus 93", 42, "bold"), bg="#000000", fg="#ce1c1c").pack(pady=60)
         for text, mines, diff in [("EASY (5 Mines)", 5, "Easy"), ("MEDIUM (8 Mines)", 8, "Medium"), ("HARD (12 Mines)", 12, "Hard")]:
             self.create_button(frame, text, 20, lambda m=mines, d=diff: self.start_game(m, d)).pack(pady=20)
         self.create_button(frame, "BACK", 16, self.show_main_menu).pack(pady=30)
@@ -204,7 +200,7 @@ class MinesweeperGUI:
                 font=("Arial", 18), bg="#000000", fg="#00ff88").pack()
         self.timer_label = tk.Label(top_frame, text="Time: 0.00s", font=("Arial", 20, "bold"), bg="#000000", fg="#ffffff")
         self.timer_label.pack(pady=15)
-        # UPDATED: Added question mark instruction
+
         tk.Label(top_frame, text="Left Click: Reveal | Right Click: Flag/Question Mark", 
                 font=("Arial", 14), bg="#000000", fg="#666666").pack()
         
@@ -255,7 +251,6 @@ class MinesweeperGUI:
                 self.show_main_menu()
 
     def on_cell_right_click(self, row, col):
-        # UPDATED: Use cycle_flag instead of toggle_flag
         if self.game and self.game.cycle_flag(row, col):
             self.update_board()
 
@@ -269,7 +264,7 @@ class MinesweeperGUI:
                     self.buttons[i][j].config(text=val, bg="#0a0a0a", relief="sunken", state="disabled", fg=colors.get(val, '#ffffff'))
                 elif self.game.flagged_cells[i][j]:
                     self.buttons[i][j].config(text="🚩", bg="#1a1a1a", fg="#ff0000")
-                elif self.game.questioned_cells[i][j]:  # NEW: Show question mark
+                elif self.game.questioned_cells[i][j]:  
                     self.buttons[i][j].config(text="❓", bg="#1a1a1a", fg="#ffd93d")
                 else:
                     self.buttons[i][j].config(text="", bg="#1a1a1a")
